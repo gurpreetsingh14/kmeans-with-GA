@@ -84,7 +84,7 @@ class generate_data:
         return cluster_map
 
     
-    def plot_input(self,input_data):
+    def plot_input(input_data):
         '''
         This function plots the input data on a 2-D plane.
 
