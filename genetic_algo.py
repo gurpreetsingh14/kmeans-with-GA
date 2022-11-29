@@ -5,18 +5,30 @@ def init(m, n):
     return numpy.random.random(size=(m,n))
 
 def euclidean_distance(X, Y):
+    print("\nX:")
+    print(X)
+    print("\nY:")
+    print(Y)
     return numpy.sqrt(numpy.sum(numpy.power(X - Y, 2), axis=1))
 
 def cluster_data(solution):
     # global num_cluster, data
+    print(solution)
     feature_vector_length = solution.shape[1]
+    print("feature vector length")
+    print(feature_vector_length)
     cluster_centers = []
     all_clusters_dists = []
     clusters = []
     clusters_sum_dist = []
 
     for clust_idx in range(num_clusters):
-        cluster_centers.append(solution[feature_vector_length*clust_idx:feature_vector_length*(clust_idx+1)])
+        print("range of indices")
+        print(feature_vector_length*clust_idx)
+        print(feature_vector_length*(clust_idx+1))
+        cluster_centers.append(solution[clust_idx:(clust_idx+1)])
+        print("clusters centers")
+        print(cluster_centers)
         cluster_center_dists = euclidean_distance(solution, cluster_centers[clust_idx])
         all_clusters_dists.append(numpy.array(cluster_center_dists))
 
@@ -46,7 +58,9 @@ def fitness_func(solution):
 
 def print_result(gen_num, pop, fitness, x):
     m = pop.shape[0]
-    print(f'Generation {gen_num} max fitness {fitness.max():0.4f} at x = {x[fitness.argmax()]:0.4f}')
+    print("\nfitness line 61")
+    print(fitness)
+    # print(f'Generation {gen_num} max fitness {fitness.max():0.4f} at x = {x[fitness.argmax()]:0.4f}')
     print(f'Average fitness: {fitness.mean():0.4f}')
 
 # this is the fitness function that needs to be adjusted to the problem.
@@ -58,12 +72,16 @@ def func(x):
 def selection(pop, sample_size, fitness):
     m,n = pop.shape
     new_pop = pop.copy()
+    print("\nfitness")
+    print(fitness)
         
     for i in range(m):
         rand_id = numpy.random.choice(m, size=max(1, int(sample_size*m)), replace=False)
-        max_id = rand_id[fitness[rand_id].argmax()]
-        print(fitness[rand_id].argmax())
-        print(rand_id[fitness[rand_id].argmax()])
+        # print("rand id")
+        # print(rand_id)
+        max_id = rand_id.argmax()
+        # print(fitness[rand_id].argmax())
+        # print(rand_id[fitness[rand_id].argmax()])
         new_pop[i] = pop[max_id].copy()
     
     return new_pop
@@ -97,23 +115,26 @@ def decode(ss, a, b):
     return numpy.array(x)
 
 def GeneticAlgorithm(func, pop_size, str_size, low, high, 
-                     ps=0.2, pc=1.0, pm=0.1, max_iter=1000, eps=1e-5, random_state=None):
+                     ps=0.2, pc=1.0, pm=0.1, max_iter=1000, random_state=None):
     
     numpy.random.seed(random_state)
-    pop = init(pop_size, str_size) # generates the population
-    x = decode(pop, low, high)
+    pop = init(pop_size, str_size)
+    # print(pop)
+    # x = decode(pop, low, high)
+    x = pop
     fitness = func(x)
-    best = [fitness.max()]
+    # best = [fitness.max()]
     print_result(1, pop, fitness, x)
     
     i = 0
-    while i < max_iter and abs(best[-1]) > eps:
+    while i < max_iter:
         pop = selection(pop, ps, fitness)
         pop = crossover(pop, pc)
         pop = mutation(pop, pm)
-        x = decode(pop, low, high)
+        # x = decode(pop, low, high)
+        x = pop
         fitness = func(x)
-        best.append(fitness.max())
+        # best.append(fitness.max())
         i += 1
     
     print_result(i, pop, fitness, x)
@@ -124,7 +145,9 @@ def GeneticAlgorithm(func, pop_size, str_size, low, high,
     else:
         print('Solution found at iteration', i)
         
-    return fitness, x, best, i, pop_size
+    return fitness, x, i, pop_size
 
 
-fs, xs, best, i, m = GeneticAlgorithm(func, pop_size=1, str_size=20, low=1, high=3, random_state=69)
+fs, xs, i, m = GeneticAlgorithm(fitness_func, pop_size=10, str_size=20, low=-6, high=20, random_state=69)
+print("\nnfinal x")
+print(xs)
