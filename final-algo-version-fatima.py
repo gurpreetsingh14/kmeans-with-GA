@@ -97,12 +97,13 @@ def fitness_func(solution):
 
 def init_cluster_center(num_clusters,start_coord,end_coord):
     io = []
-    rc = [2,2.25,2.5,2.75,3,3.25,3.5,3.75,4]
+    rc = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
     cluster1_num = num_clusters*2
     cluster1_x1_start = start_coord
     cluster1_x1_end = end_coord
     cluster1_x1 = numpy.random.random(size=(cluster1_num))
     cluster1_x1 = cluster1_x1 * (cluster1_x1_end - cluster1_x1_start) + cluster1_x1_start
+    cluster1_x1 = numpy.array([2.75, 3.5, 9.25, 17])
     io.append(cluster1_x1)
     for y in range(len(rc)):
         ui = rc[y]*cluster1_x1
@@ -164,12 +165,12 @@ def mutation(pop, pm):
     new_pop = pop.copy()
     mutation_prob = (numpy.random.uniform(0, 1, size=(m,n)) < pm).astype(int)
     # print("\nmutation prob", mutation_prob)
-    return (mutation_prob + new_pop) % 2
+    return (mutation_prob + new_pop)
 
 #GENETIC ALGORITHM
 
 def GeneticAlgorithm(func, num_clusters,start_coord,end_coord, 
-                     ps=0.2, pc=1.0, pm=0.1, max_iter=1000, random_state=1234):
+                     ps=0.2, pc=1.0, pm=0.1, max_iter=100, random_state=1234):
     
     numpy.random.seed(random_state)
     pop = init_cluster_center(num_clusters,start_coord,end_coord)
@@ -210,6 +211,9 @@ def GeneticAlgorithm(func, num_clusters,start_coord,end_coord,
 f,b,p = GeneticAlgorithm(fitness_func,2,0,20)
 fitness = fitness_func(p)
 best = [fitness.max()]
+index = numpy.where(numpy.isclose(fitness, best))
+print(p[index])
+# numpy.where(numpy.isclose(p, best))
 # print(f'fitness is: {f}')
 print(f'best fitness is: {best}')
 print(f'population of centroids is: {p}')
