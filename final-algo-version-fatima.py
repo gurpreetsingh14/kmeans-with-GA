@@ -183,12 +183,6 @@ def GeneticAlgorithm(func, num_clusters,start_coord,end_coord,
         
     return fitness, best, i, pop
 
-f,b,p = GeneticAlgorithm(fitness_func,2,0,20)
-#fitness = fitness_func(p)
-""" best = [fitness.max()]
-index = numpy.where(numpy.isclose(fitness, best))
-print(p[index])
-# numpy.where(numpy.isclose(p, best))
-# print(f'fitness is: {f}')
-print(f'best fitness is: {best}')
-print(f'population of centroids is: {p}') """
+#TEST! TEST! TEST!
+_, plot_result, _, _ = GeneticAlgorithm(fitness_func,2,0,20)
+display_plot(plot_result)
