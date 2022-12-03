@@ -1,5 +1,5 @@
 import numpy
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 
 # ARTIFICIAL DATA GENERATION
 
@@ -98,12 +98,12 @@ def fitness_func(solution):
 def init_cluster_center(num_clusters,start_coord,end_coord):
     io = []
     rc = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
-    cluster1_num = num_clusters*2
+    """ cluster1_num = num_clusters*2
     cluster1_x1_start = start_coord
     cluster1_x1_end = end_coord
     cluster1_x1 = numpy.random.random(size=(cluster1_num))
-    cluster1_x1 = cluster1_x1 * (cluster1_x1_end - cluster1_x1_start) + cluster1_x1_start
-    cluster1_x1 = numpy.array([2.75, 3.5, 9.25, 17])
+    cluster1_x1 = cluster1_x1 * (cluster1_x1_end - cluster1_x1_start) + cluster1_x1_start """
+    cluster1_x1 = numpy.array([2, 3, 9, 15])
     io.append(cluster1_x1)
     for y in range(len(rc)):
         ui = rc[y]*cluster1_x1
@@ -112,7 +112,6 @@ def init_cluster_center(num_clusters,start_coord,end_coord):
 # return: numpy array: [[C1-x C1-y C2-x C2-y][][][]....]
 
 #SELECTION FUNCTION
-
 def selection(pop,sample_size, fitness):
     m,n = pop.shape
     new_pop = pop.copy()
@@ -125,41 +124,19 @@ def selection(pop,sample_size, fitness):
     return new_pop
 
 #CROSSOVER
-
 def crossover(pop, pc):
     m,n = pop.shape
-    # print("\n\n")
-    # print(m)
-    # print(n)
     new_pop = pop.copy()
     
     for i in range(0, m-1, 2):
         if numpy.random.uniform(0, 1) < pc:
-            # print("\nhitting the if clause")
-            # print("\nvalue of i")
-            # print(i)
             pos = numpy.random.randint(0, n-1)
-            # print("\npos")
-            # print(pos)
-            # print("before\n")
-            # print(new_pop)
-            first_value = new_pop[i, pos+1:].copy()
-            second_value = pop[i+1, pos+1:].copy()
-            new_pop[i, pos+1:] = second_value
-            new_pop[i+1, pos+1:] = first_value
-            # print("\nafter the switch")
-            # print(new_pop)
-            # if (pop == new_pop).all():
-                # print("SAME")
-            # else:
-                # print("DIFFERENT")
-            
-            
+            new_pop[i, pos+1:] = pop[i+1, pos+1:].copy()
+            new_pop[i+1, pos+1:] = pop[i, pos+1:].copy()
             
     return new_pop
 
 #MUTATION
-
 def mutation(pop, pm):
     m,n = pop.shape
     new_pop = pop.copy()
@@ -167,53 +144,51 @@ def mutation(pop, pm):
     # print("\nmutation prob", mutation_prob)
     return (mutation_prob + new_pop)
 
+#PRINT RESULT
+def get_results(generation,population,fitness):
+    m = population.shape[0]
+    best = [fitness.max()]
+    index = numpy.where(numpy.isclose(fitness, best))
+    population = numpy.array(population)
+    print(f'Generation #{generation}   |fitness: {max(fitness):0.5f} |Centroid = {population[index[0]][0]}')
+
+#PLOT FITNESS VALUES
+def display_plot(best):
+    plt.plot(best, color='c')
+    plt.xlabel('Iteration')
+    plt.ylabel('Best Fitness')
+    plt.grid()
+    plt.show()
+
 #GENETIC ALGORITHM
 
 def GeneticAlgorithm(func, num_clusters,start_coord,end_coord, 
-                     ps=0.2, pc=1.0, pm=0.1, max_iter=100, random_state=1234):
+                     ps=0.2, pc=1.0, pm=0.1, max_iter=100, random_state=123):
     
     numpy.random.seed(random_state)
     pop = init_cluster_center(num_clusters,start_coord,end_coord)
-    print("initial pop")
-    print(pop)
     fitness = func(pop)
-    best = [fitness.max()]
-    print("initial best fitness", best)
-    fitness_res = []
+    best = [fitness.max()]    
+    print('=' * 68)
+    get_results(-1,pop,fitness)
     i = 0
-    #print('==============Population before SELECTION')
-    #print(pop)
-    #print('==============Fitness list')
-    #print(fitness)
     while i < max_iter:
         pop = selection(pop, ps, fitness)
-        # print('==============Population after SELECTION')
-        # print(pop)
         pop = crossover(pop, pc)
-        # print('==============Population after CROSSOVER')
-        # print(pop)
         pop = mutation(pop, pm)
-        # print('==============Population after MUTATION')
-        # print(pop)
         fitness = func(pop)
-        # print("current fitness", fitness)
-        # print("\nfitness")
-        # print(fitness)
-        if fitness.max()>best[0]:
-            fitness_res.append(fitness)
+        best.append(fitness.max())
+        get_results(i,pop,fitness)
         i += 1
-    
-    #print(f'Generation {i} fitness {fitness:0.4f}')    
-    #print(f'Best fitness: {max(fitness_res):0.4f} at generation {fitness_res.index(max(fitness_res))}')
-            
-    return fitness_res, best, pop
+        
+    return fitness, best, i, pop
 
 f,b,p = GeneticAlgorithm(fitness_func,2,0,20)
-fitness = fitness_func(p)
-best = [fitness.max()]
+#fitness = fitness_func(p)
+""" best = [fitness.max()]
 index = numpy.where(numpy.isclose(fitness, best))
 print(p[index])
 # numpy.where(numpy.isclose(p, best))
 # print(f'fitness is: {f}')
 print(f'best fitness is: {best}')
-print(f'population of centroids is: {p}')
+print(f'population of centroids is: {p}') """
