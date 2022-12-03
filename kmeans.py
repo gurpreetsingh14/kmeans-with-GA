@@ -9,6 +9,7 @@ https://towardsdatascience.com/create-your-own-k-means-clustering-algorithm-in-p
 """
 
 import numpy as np
+# import matplotlib.pyplot as plt
 # from sklearn.datasets import make_blobs
 
 def euclidean(point, data):
@@ -30,7 +31,7 @@ class KMeans:
         self.max_iter = max_iter
         self.centroids = None
         
-    def fit(self, X_train):
+    def fit(self, X_train, verbose = False, p = False):
         # randomly select the centroid start points according to a uniform distribution
         min_, max_ = np.min(X_train, axis = 0), np.max(X_train, axis = 0)
         self.centroids = [np.random.uniform(min_, max_) for _ in range(self.n_clusters)]
@@ -38,7 +39,7 @@ class KMeans:
         prev_centroids = None
         while np.not_equal(self.centroids, prev_centroids).any() and iteration < self.max_iter:
             classified_points = [[] for _ in range(self.n_clusters)]
-            
+            if verbose: print("Iteration",iteration)
             for x in X_train:
                 # print('X:',x)
                 # print('Centroids:',np.array(self.centroids))
@@ -55,7 +56,9 @@ class KMeans:
             for i, centroid in enumerate(self.centroids):
                 if np.isnan(centroid).any():
                     self.centroids[i] = prev_centroids[i] # don't update
-                    
+            if verbose: print("Previous centroids:",prev_centroids)
+            if verbose: print("New centroids:", self.centroids)
+            if verbose: print("==============================")
             iteration +=1
             
     def evaluate(self, X):
@@ -69,22 +72,10 @@ class KMeans:
             
         return centroids, centroid_ids
     
+    def to__solution(self):
+        l = []
+        for el in self.centroids:
+            l.append(el[0])
+            l.append(el[1])
+        return np.array(l)
     
-    
-# point = [1,2]
-# data = [[1,2],[3,4],[5,6],[6,7]]
-# point = np.array(point)
-# data = np.array(data)
-# # print(euclidean(point, data))
-# # print(eucl(point, data))
-
-# X_train, true_labels = make_blobs(n_samples=10, centers=2)
-# # print(X_train, true_labels, type(X_train))
-# # print(euclidean(point, X_train))
-# model = KMeans(2)
-# model.fit(X_train)
-# print('Centroids:', model.centroids)
-# print('Evaluation:',model.evaluate(X_train[0:2]))
-# print('Distance 0:',euclidean(X_train[0],model.centroids))
-# print('Distance 1:',euclidean(X_train[1],model.centroids))
-# print('True labels:',true_labels[0],true_labels[1])
