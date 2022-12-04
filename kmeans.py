@@ -18,17 +18,52 @@ def euclidean(point, data):
 #         l.append(euc)
 #     return np.array(l)
 
-def plot_res(X_train,centroids):
-    colors = itertools.cycle(["r", "g", "b"])
+def plot_res(X_train,centroids, alpha , marker):
+    plt.xlim(0, 100)
+    plt.ylim(0,100)
+    colors = itertools.cycle(["lime", "fuchsia", "red"])
+    markers = itertools.cycle(["+","x","d"])
     x = []
     y = []
     for el in X_train:
         x.append(el[0])
         y.append(el[1])
-    plt.scatter(x,y, c = 'k')
+    plt.scatter(x,y, c = 'k', alpha = 0.5)
     for el in centroids:
-        plt.scatter(el[0], el[1],c = next(colors))
-
+        plt.scatter(el[0], el[1],c = next(colors), marker = next(markers), alpha = alpha)
+        
+def plot_resV3(X_train,centroids, alpha , marker, nb_obs = 10, nb_clusters=2):
+    plt.xlim(0, 100)
+    plt.ylim(0,100)
+    colors = itertools.cycle(["r", "g", "m"])
+    markers = itertools.cycle(["+","x","1"])
+    colorsc = ["tab:blue","tab:orange","tab:brown"]
+    i = 0
+    x = []
+    y = []
+    for el in X_train:
+        i+=1
+        x.append(el[0])
+        y.append(el[1])
+    for j in range(1, nb_clusters+1):
+        plt.scatter(x[(j-1)*nb_obs:j*nb_obs], y[(j-1)*nb_obs:j*nb_obs] , c = colorsc[j-1])
+    for el in centroids:
+        plt.scatter(el[0], el[1],c = next(colors), marker = next(markers), alpha = alpha)
+        
+# def plot_resV2(data, alpha = 0.8, raw = True ):
+#     plt.xlim(0, 100)
+#     plt.ylim(0, 100)
+#     colors = itertools.cycle(["r", "g", "b"])
+#     markers = itertools.cycle(["+","x","d"])
+#     x = []
+#     y = []
+#     for el in data:
+#         x.append(el[0])
+#         y.append(el[1])
+#     if raw: # print the full data
+#         plt.scatter(x,y, c = 'k', alpha = 0.8)    
+#     else:
+#         plt.scatter(el[0], el[1],c = next(colors), alpha = alpha, marker = next(markers))
 
 class KMeans:
     def __init__(self, n_clusters, max_iter = 400):
@@ -47,7 +82,6 @@ class KMeans:
             self.evolution.append(self.centroids)
             classified_points = [[] for _ in range(self.n_clusters)]
             if verbose: print("Iteration",iteration)
-            if p: plot_res(X_train, self.centroids)
             for x in X_train:
                 # print('X:',x)
                 # print('Centroids:',np.array(self.centroids))
@@ -68,6 +102,14 @@ class KMeans:
             if verbose: print("New centroids:", self.centroids)
             if verbose: print("==============================")
             iteration +=1
+        if verbose: print("Algorithm converged after",iteration,"iterations.")
+        alphas = itertools.cycle(list(np.arange(0.1,1,1/iteration)))
+        if p: # plots
+            # plot_resV2(X_train)
+            for c in self.evolution:
+                plot_resV3(X_train, c, alpha = next(alphas), marker = "x", nb_clusters=self.n_clusters)  
+                # plot_resV2(c, alpha = next(alphas), raw = False)
+        
             
     def evaluate(self, X):
         centroids = []
