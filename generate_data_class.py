@@ -44,14 +44,14 @@ class GenerateData:
         data = []
         k = self.num_of_clusters
         if k == 2:
-            c1 = numpy.array([self.data_generation(10,0,5,2,6)]).T
-            c2 = numpy.array([self.data_generation(10,4,12,14,18)]).T
+            c1 = numpy.array([self.data_generation(100,0,15,2,20)]).T
+            c2 = numpy.array([self.data_generation(100,5,25,15,30)]).T
             data = numpy.concatenate((c1, c2), axis=0)
 
         elif k == 3:
-            c1 = numpy.array([self.data_generation(10,0,5,2,6)]).T
-            c2 = numpy.array([self.data_generation(10,4,12,14,18)]).T
-            c3 = numpy.array([self.data_generation(10,25,35,50,90)]).T
+            c1 = numpy.array([self.data_generation(100,0,15,2,20)]).T
+            c2 = numpy.array([self.data_generation(100,40,60,30,40)]).T
+            c3 = numpy.array([self.data_generation(100,25,45,50,100)]).T
             data = numpy.concatenate((c1, c2, c3), axis=0)
 
         else:

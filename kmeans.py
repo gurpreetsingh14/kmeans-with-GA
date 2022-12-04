@@ -32,7 +32,7 @@ def plot_res(X_train,centroids, alpha , marker):
     for el in centroids:
         plt.scatter(el[0], el[1],c = next(colors), marker = next(markers), alpha = alpha)
         
-def plot_resV3(X_train,centroids, alpha , marker, nb_obs = 10, nb_clusters=2):
+def plot_resV3(X_train,centroids, alpha , marker, nb_obs = 100, nb_clusters=2):
     plt.xlim(0, 100)
     plt.ylim(0,100)
     colors = itertools.cycle(["r", "g", "m"])
@@ -102,7 +102,7 @@ class KMeans:
             if verbose: print("New centroids:", self.centroids)
             if verbose: print("==============================")
             iteration +=1
-        if verbose: print("Algorithm converged after",iteration,"iterations.")
+        print("Algorithm converged after",iteration,"iterations.")
         alphas = itertools.cycle(list(np.arange(0.1,1,1/iteration)))
         if p: # plots
             # plot_resV2(X_train)

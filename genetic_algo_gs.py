@@ -68,7 +68,7 @@ def init_cluster_center(num_clusters):
     io = []
     rc = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
     if num_clusters == 3:
-        cluster1_x1 = numpy.array([40,46,11,11,2,2])
+        cluster1_x1 = numpy.array([9,9,4,4,42,42])
     elif num_clusters == 2:
         cluster1_x1 = numpy.array([2, 3, 9, 15])
     else:
@@ -85,6 +85,7 @@ def get_results(generation,population,fitness):
     index = numpy.where(numpy.isclose(fitness, best))
     population = numpy.array(population)
     print(f'Generation #{generation}   |fitness: {max(fitness):0.5f} |Centroid = {population[index[0]][0]}')
+    return population[index[0]][0]
 
 #Plot Fitness Values over generations
 def display_plot(best):
@@ -125,7 +126,7 @@ def mutation(pop, pm):
     m,n = pop.shape
     new_pop = pop.copy()
     mutation_prob = (numpy.random.uniform(0, 1, size=(m,n)) < pm).astype(int)
-    return (mutation_prob + new_pop) % 2
+    return (mutation_prob + new_pop)
 
 
 def GeneticAlgorithm(func,num_clusters,gen,ps=0.2,pc=1.0,pm=0.1,random_state=1234):    
@@ -135,7 +136,14 @@ def GeneticAlgorithm(func,num_clusters,gen,ps=0.2,pc=1.0,pm=0.1,random_state=123
     best = [fitness.max()] 
 
     print('=' * 68)
-    get_results(-1,pop,fitness)
+    list_best_centroids = []
+    ly0 = []
+    res0 = get_results(-1,pop,fitness)
+    ly0.append(numpy.array(res0[0:2]))
+    ly0.append(numpy.array(res0[2:4]))
+    if num_clusters == 3:
+        ly0.append(numpy.array(res0[4:6]))
+    list_best_centroids.append(ly0)
 
     i = 0
     while i < gen:
@@ -144,10 +152,16 @@ def GeneticAlgorithm(func,num_clusters,gen,ps=0.2,pc=1.0,pm=0.1,random_state=123
         pop = mutation(pop, pm)
         fitness = func(pop)
         best.append(fitness.max())
-        get_results(i,pop,fitness)
+        res1 = get_results(i,pop,fitness)
+        ly0 = []
+        ly0.append(numpy.array(res1[0:2]))
+        ly0.append(numpy.array(res1[2:4]))
+        if num_clusters == 3:
+            ly0.append(numpy.array(res1[4:6]))
+        list_best_centroids.append(ly0)
         i += 1
     
     print('=' * 68)
     print(f'Maximum fitness is: {max(best):0.5f} at Generation: {best.index(max(best))}')
         
-    return fitness, best, i, pop
+    return fitness, best, i, pop, list_best_centroids
