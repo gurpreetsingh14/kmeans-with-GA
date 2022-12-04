@@ -49,9 +49,9 @@ class GenerateData:
             data = numpy.concatenate((c1, c2), axis=0)
 
         elif k == 3:
-            c1 = numpy.array([self.data_generation(100,0,15,2,20)]).T
-            c2 = numpy.array([self.data_generation(100,40,60,30,40)]).T
-            c3 = numpy.array([self.data_generation(100,25,45,50,100)]).T
+            c1 = numpy.array([self.data_generation(100,0,25,2,50)]).T
+            c2 = numpy.array([self.data_generation(100,40,80,30,100)]).T
+            c3 = numpy.array([self.data_generation(100,50,90,80,150)]).T
             data = numpy.concatenate((c1, c2, c3), axis=0)
 
         else:
