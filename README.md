@@ -7,3 +7,7 @@ This project is created for the fulfillment of the course _Algorithm of Optimiza
 - Generate data to form n clusters
 - Write k-means algorithm from scratch and visualize the results on a graph
 - Solve the clustering problem using genetic algorithm
+
+To run this project
+- Clone this repo
+- Follow example.py file
