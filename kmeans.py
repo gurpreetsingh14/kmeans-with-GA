@@ -77,5 +77,4 @@ class KMeans:
         for el in self.centroids:
             l.append(el[0])
             l.append(el[1])
-        return np.array(l)
-    
+        return np.array(l) 

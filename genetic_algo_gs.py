@@ -11,16 +11,16 @@ num_clusters = 2
 gy = GenerateData(num_clusters)
 data = gy.raw_data()
 
-'''
-Input: 
-1. solution is the initial coordinates of centriods. For example,
-if num_of_clusters = 2, then
-solution = [C1-x, C1-y, C2-x, C2-y]
-2. data is the whole data, all the samples
-
-'''
 
 def cluster_data(solution):
+    '''
+    Input: 
+    1. solution is the initial coordinates of centriods. For example,
+    if num_of_clusters = 2, then
+    solution = [C1-x, C1-y, C2-x, C2-y]
+    2. data is the whole data, all the samples
+
+    '''
     global num_clusters, data
     feature_vector_length = data.shape[1]
     cluster_centers = []
@@ -48,11 +48,12 @@ def cluster_data(solution):
 
     return cluster_centers, all_clusters_dists, clusters, clusters_sum_dist
 
-'''
-fitness_func() is created and calls the cluster_data() function and 
-calculates the sum of distances in all clusters
-'''
+
 def fitness_func(solution):
+    '''
+    fitness_func() is created and calls the cluster_data() function and 
+    calculates the sum of distances in all clusters
+    '''
     fit_list = []
     m,_ = solution.shape
     for t in range(m):
@@ -63,7 +64,6 @@ def fitness_func(solution):
     return numpy.array(fit_list)
 
 #GENERATE Initial coordinates for cluster center
-
 def init_cluster_center(num_clusters):
     io = []
     rc = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
@@ -81,7 +81,6 @@ def init_cluster_center(num_clusters):
 
 #Print Result
 def get_results(generation,population,fitness):
-    m = population.shape[0]
     best = [fitness.max()]
     index = numpy.where(numpy.isclose(fitness, best))
     population = numpy.array(population)
@@ -96,12 +95,11 @@ def display_plot(best):
     plt.show()
 
 #Steps in Genetic Algorithm
-
 #1. Selection
 def selection(pop,sample_size, fitness):
     m,n = pop.shape
     new_pop = pop.copy()
-        
+       
     for i in range(m):
         rand_id = numpy.random.choice(m, size=max(1, int(sample_size*m)), replace=False)
         max_id = rand_id[fitness[rand_id].argmax()]
@@ -130,15 +128,17 @@ def mutation(pop, pm):
     return (mutation_prob + new_pop) % 2
 
 
-def GeneticAlgorithm(func, num_clusters,ps=0.2, pc=1.0, pm=0.1, max_iter=1, random_state=1234):    
+def GeneticAlgorithm(func,num_clusters,gen,ps=0.2,pc=1.0,pm=0.1,random_state=1234):    
     numpy.random.seed(random_state)
     pop = init_cluster_center(num_clusters)
     fitness = func(pop)
-    best = [fitness.max()]    
+    best = [fitness.max()] 
+
     print('=' * 68)
     get_results(-1,pop,fitness)
+
     i = 0
-    while i < max_iter:
+    while i < gen:
         pop = selection(pop, ps, fitness)
         pop = crossover(pop, pc)
         pop = mutation(pop, pm)
@@ -146,5 +146,8 @@ def GeneticAlgorithm(func, num_clusters,ps=0.2, pc=1.0, pm=0.1, max_iter=1, rand
         best.append(fitness.max())
         get_results(i,pop,fitness)
         i += 1
+    
+    print('=' * 68)
+    print(f'Maximum fitness is: {max(best):0.5f} at Generation: {best.index(max(best))}')
         
     return fitness, best, i, pop
