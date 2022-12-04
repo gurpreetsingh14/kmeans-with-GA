@@ -64,15 +64,15 @@ def fitness_func(solution):
     return numpy.array(fit_list)
 
 #GENERATE Initial coordinates for cluster center
-def init_cluster_center(num_clusters):
+def init_cluster_center(num_clusters,dataCent):
     io = []
-    rc = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
+    rc = [1, 1.01, 1.02, 1.03, 1.04, 1.05, 1.06, 1.07, 1.08, 1.09]
     if num_clusters == 3:
-        cluster1_x1 = numpy.array([9,9,4,4,42,42])
+        cluster1_x1 = numpy.array(dataCent)
     elif num_clusters == 2:
-        cluster1_x1 = numpy.array([2, 3, 9, 15])
+        cluster1_x1 = numpy.array(dataCent)
     else:
-        print("Out od Scope")
+        print("Out of Scope")
 
     for y in range(len(rc)):
         ui = rc[y]*cluster1_x1
@@ -84,7 +84,7 @@ def get_results(generation,population,fitness):
     best = [fitness.max()]
     index = numpy.where(numpy.isclose(fitness, best))
     population = numpy.array(population)
-    print(f'Generation #{generation}   |fitness: {max(fitness):0.5f} |Centroid = {population[index[0]][0]}')
+    print(f'Generation #{generation}   |fitness: {max(fitness):0.7f} |Centroid = {population[index[0]][0]}')
     return population[index[0]][0]
 
 #Plot Fitness Values over generations
@@ -129,9 +129,9 @@ def mutation(pop, pm):
     return (mutation_prob + new_pop)
 
 
-def GeneticAlgorithm(func,num_clusters,gen,ps=0.2,pc=1.0,pm=0.1,random_state=1234):    
+def GeneticAlgorithm(func,num_clusters,gen,dataCen,ps=0.2,pc=1.0,pm=0.1,random_state=1234):    
     numpy.random.seed(random_state)
-    pop = init_cluster_center(num_clusters)
+    pop = init_cluster_center(num_clusters,dataCen)
     fitness = func(pop)
     best = [fitness.max()] 
 

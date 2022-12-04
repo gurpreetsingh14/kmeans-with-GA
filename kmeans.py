@@ -33,8 +33,8 @@ def plot_res(X_train,centroids, alpha , marker):
         plt.scatter(el[0], el[1],c = next(colors), marker = next(markers), alpha = alpha)
         
 def plot_resV3(X_train,centroids, alpha , marker, nb_obs = 100, nb_clusters=2):
-    plt.xlim(0, 100)
-    plt.ylim(0,100)
+    plt.xlim(0, 200)
+    plt.ylim(0,200)
     colors = itertools.cycle(["r", "g", "m"])
     markers = itertools.cycle(["+","x","1"])
     colorsc = ["tab:blue","tab:orange","tab:brown"]
