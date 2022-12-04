@@ -9,5 +9,5 @@ This project is created for the fulfillment of the course _Algorithm of Optimiza
 - Solve the clustering problem using genetic algorithm
 
 To run this project
-- Clone this repo
+- Clone this repo: https://github.com/gurpreetsingh14/kmeans-with-GA.git
 - Follow example.py file
